@@ -13,8 +13,9 @@ Model name is converted to lowercase for the collection name:
 
 from pydantic import BaseModel, Field
 from typing import Optional
+import datetime as dt
 
-# Example schemas (replace with your own):
+# Example schemas (you can keep or remove as needed):
 
 class User(BaseModel):
     """
@@ -38,8 +39,33 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
 # --------------------------------------------------
+# Business management app schemas (used by the app)
+# --------------------------------------------------
+
+class Income(BaseModel):
+    """Incomes collection schema (collection name: income)"""
+    title: str = Field(..., description="Short title for the income")
+    amount: float = Field(..., gt=0, description="Income amount")
+    date: dt.date = Field(..., description="Date of income")
+    note: Optional[str] = Field(None, description="Optional note")
+    category: Optional[str] = Field(None, description="Income category")
+
+class Expense(BaseModel):
+    """Expenses collection schema (collection name: expense)"""
+    title: str = Field(..., description="Short title for the expense")
+    amount: float = Field(..., gt=0, description="Expense amount")
+    date: dt.date = Field(..., description="Date of expense")
+    note: Optional[str] = Field(None, description="Optional note")
+    category: Optional[str] = Field(None, description="Expense category")
+
+class Item(BaseModel):
+    """Inventory items collection schema (collection name: item)"""
+    name: str = Field(..., description="Item name")
+    sku: Optional[str] = Field(None, description="Stock keeping unit")
+    quantity: int = Field(0, ge=0, description="Quantity on hand")
+    unit_cost: float = Field(0, ge=0, description="Unit cost")
+    note: Optional[str] = Field(None, description="Optional note")
 
 # Note: The Flames database viewer will automatically:
 # 1. Read these schemas from GET /schema endpoint
